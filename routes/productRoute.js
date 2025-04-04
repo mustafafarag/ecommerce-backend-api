@@ -8,13 +8,14 @@
 //Import the necessary modules
 const express = require("express");
 const router = express.Router();
-const {  createProduct,  getProduct, getAllProduct, updateProduct, deleteProduct,addToWishlist } = require("../controller/productCtrl");
+const {  createProduct,  getProduct, getAllProduct, updateProduct, deleteProduct,addToWishlist, rating } = require("../controller/productCtrl");
 const { authmiddleware , isAdmin } = require("../middlewares/authmiddleware");
 
 // Define the routes for the product.
 router.post("/", authmiddleware, isAdmin , createProduct); 
 router.get("/:id", getProduct); 
 router.put("/wishlist", authmiddleware, addToWishlist);
+router.put("/rating", authmiddleware, rating);
 router.get("/", getAllProduct);
 router.put("/:id",authmiddleware, isAdmin , updateProduct);
 router.delete("/:id",authmiddleware, isAdmin , deleteProduct);
