@@ -60,12 +60,18 @@ var productSchema = new mongoose.Schema(
         type: String,
         required: true,
     },
-    ratings:
+    ratings: [
     // Ratings field - An array of objects representing the ratings given by users.
       {
         star: Number,
         postedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Reference to the user who posted this rating.
       },
+    ],
+    totalrating: {
+      // Total rating field - The total rating given to the product.
+      type: String,
+      default: 0,
+    },
   },
   { timestamps: true } // Add timestamp fields createdAt and updatedAt to the schema
 );
