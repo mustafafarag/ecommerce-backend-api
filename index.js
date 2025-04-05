@@ -14,6 +14,10 @@ const {notFound, errorHandler} = require("./middlewares/errorHandler")
 const cookieParser = require("cookie-parser")
 const productRouter = require("./routes/productRoute");
 const morgan = require("morgan");
+const blogRouter = require("./routes/blogRoute");
+const categoryRouter = require("./routes/productcategoryRoute");
+const blogcategoryRouter = require("./routes/blogCatRoute");
+const brandRouter = require("./routes/brandRoute");
 
 
 // Using the middlewares and routes
@@ -25,6 +29,11 @@ app.use(morgan("dev"));
 
 app.use("/api/user", authRouter)
 app.use("/api/product", productRouter); 
+app.use("/api/blog", blogRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/blogcategory",blogcategoryRouter )
+app.use("/api/brand", brandRouter);
+
 app.use(notFound)
 app.use(errorHandler)
 
