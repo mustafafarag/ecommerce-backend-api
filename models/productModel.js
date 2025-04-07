@@ -64,6 +64,7 @@ var productSchema = new mongoose.Schema(
     // Ratings field - An array of objects representing the ratings given by users.
       {
         star: Number,
+        comment: String,
         postedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Reference to the user who posted this rating.
       },
     ],
