@@ -193,7 +193,7 @@ const rating = asyncHandler(async (req, res) =>{
 
 
     const { _id } = req.user;
-    const { star, prodId} = req.body;
+    const { star, prodId, comment} = req.body;
     const product = await Product.findById(prodId);
 
 
@@ -207,7 +207,7 @@ const rating = asyncHandler(async (req, res) =>{
                   ratings: { $elemMatch: alreadyRated },
               },
               {
-                  $set: { "ratings.$.star": star },
+                  $set: { "ratings.$.star": star,"ratings.$.comment": comment },
               },
               { new: true }
           );
@@ -220,12 +220,28 @@ const rating = asyncHandler(async (req, res) =>{
           // If the product has not been rated by the user, add a new rating
           await Product.findByIdAndUpdate(prodId, {
               $push: {
-                  ratings: { star, postedBy: _id },
+                  ratings: { star:star, comment: comment , postedBy: _id },
               },
           }, { new: true });
       }
 
-
+    // get the total ratings
+    const getallratings = await Product.findById(prodId);
+    let totalRating = getallratings.ratings.length;
+    let ratingSum = getallratings.ratings
+        .map((item) => item.star)
+        .reduce((prev, curr) => prev + curr, 0);
+    let actualRating = Math.round(ratingSum / totalRating);
+    // update the total rating
+    let finalprodcut = await Product.findByIdAndUpdate(
+        prodId,
+        {
+            totalrating: actualRating,
+        },
+        { new: true }
+    
+    )
+    res.json(finalprodcut);
     }
   catch (error) {
     throw new Error(error);
