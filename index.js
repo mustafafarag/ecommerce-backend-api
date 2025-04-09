@@ -18,6 +18,7 @@ const blogRouter = require("./routes/blogRoute");
 const categoryRouter = require("./routes/productcategoryRoute");
 const blogcategoryRouter = require("./routes/blogCatRoute");
 const brandRouter = require("./routes/brandRoute");
+const couponRouter = require("./routes/couponRoute");
 
 
 // Using the middlewares and routes
@@ -27,13 +28,19 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(morgan("dev")); 
 
+
+
 app.use("/api/user", authRouter)
 app.use("/api/product", productRouter); 
 app.use("/api/blog", blogRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/blogcategory",blogcategoryRouter )
 app.use("/api/brand", brandRouter);
+app.use("/api/coupon", couponRouter);
 
+
+
+// Error handling middlewares
 app.use(notFound)
 app.use(errorHandler)
 
