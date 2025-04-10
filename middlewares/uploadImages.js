@@ -1,74 +1,76 @@
-const multer = require('multer'); // Middleware for handling multipart/form-data, primarily for file uploads.
-const sharp = require('sharp'); // Library for image processing.
-const path = require('path'); // Node.js module for handling and transforming file paths.
-const fs = require('fs'); // Node.js module for interacting with the file system.
+const multer = require('multer');
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
 
 
-// Configure multer storage to specify destination and filename for uploaded files.
-const multerStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, "../public/images")); // Save files in the public/images directory.
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.floor(Math.random() * 1e9); // Generate a unique suffix for the filename.
-        cb(null, file.fieldname + "-" + uniqueSuffix + ".jpeg"); // Set the filename format.
-    },
-});
+const multerStorage = multer.diskStorage(
+    {
+        destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, "../public/images"))
+        },
+        filename:function (req, file, cb) {
+            const uniqueSuffix = Date.now() + '-' + Math.floor(Math.random() * 1e9);
 
-// Filter uploaded files to allow only images.
+            cb(null, file.fieldname+ "-" + uniqueSuffix + ".jpeg");
+        },
+    }
+);
+
 const multerFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image')) {
-        cb(null, true); // Accept the file if it is an image.
+        cb(null, true);
     } else {
-        cb(new Error('Unsupported File Format'), false); // Reject the file if it is not an image.
+        cb(new Error('Unsuported File Format'), false);
     }
 };
 
-// Configure multer with storage, file filter, and size limit.
+
+
 const uploadPhoto = multer({
-    storage: multerStorage,
-    fileFilter: multerFilter,
-    limits: {
-        fieldSize: 2000000, // Limit file size to 2MB.
-    },
+  storage: multerStorage,
+  fileFilter: multerFilter,
+  limits: {
+    fieldSize: 2000000 } // 2mb   
 });
 
 
 
 
 const productImgResize = async (req, res, next) => {
-    if (!req.files) return next(); // If no files are uploaded, proceed to the next middleware.
+    if (!req.files) return next();
 
     await Promise.all(
         req.files.map(async (file) => {
-            await sharp(file.path) // Access the uploaded file's path.
-                .resize(300, 300) // Resize the image to 300x300 pixels.
-                .toFormat("jpeg") // Convert the image to JPEG format.
-                .jpeg({ quality: 90 }) // Set the JPEG quality to 90%.
-                .toFile(`public/images/products/${file.filename}`); // Save the resized image in the products directory.
-            fs.unlinkSync(file.path); // Delete the original uploaded file.
+            await sharp(file.path)
+                .resize(300, 300)
+                .toFormat("jpeg")
+                .jpeg({ quality: 90 })
+                .toFile(`public/images/products/${file.filename}`);
+                fs.unlinkSync(`public/images/products/${file.filename}`); 
         })
     );
-    next(); // Proceed to the next middleware.
-};
+    next();
+}
 
 
 
 const blogsImgResize = async (req, res, next) => {
-    if (!req.files) return next(); // If no files are uploaded, proceed to the next middleware.
+    if (!req.files) return next();
 
     await Promise.all(
         req.files.map(async (file) => {
-            await sharp(file.path) // Access the uploaded file's path.
-                .resize(300, 300) // Resize the image to 300x300 pixels.
-                .toFormat("jpeg") // Convert the image to JPEG format.
-                .jpeg({ quality: 90 }) // Set the JPEG quality to 90%.
-                .toFile(`public/images/blogs/${file.filename}`); // Save the resized image in the blogs directory.
-            fs.unlinkSync(file.path); // Delete the original uploaded file.
+            await sharp(file.path)
+                .resize(300, 300)
+                .toFormat("jpeg")
+                .jpeg({ quality: 90 })
+                .toFile(`public/images/blogs/${file.filename}`);
+                fs.unlinkSync(`public/images/blogs/${file.filename}`); 
+
         })
     );
-    next(); // Proceed to the next middleware.
-};
+    next();
+}
 
 
 
