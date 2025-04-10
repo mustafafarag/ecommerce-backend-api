@@ -51,10 +51,7 @@ var productSchema = new mongoose.Schema(
       default: 0,
       select: false,
     },
-    images: {
-      // Images field - An array of URLs representing different images of the product.
-      type: Array,
-    },
+    images: [],
     color: {
       // Color field - The color of the product.
         type: String,
