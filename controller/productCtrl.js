@@ -253,5 +253,45 @@ const rating = asyncHandler(async (req, res) =>{
 
 });
 
+
+
+
+// Upload images for a product
+const uploadImages = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMangoDbId(id); // Validate the MongoDB ID
+  try {
+    const uploader = (path) => cloudinaryUploadImage(path, "images"); // Function to upload image to Cloudinary
+    const urls = [];
+    const files = req.files; // Get the uploaded files
+    for (const file of files) {
+      const { path } = file; // Get the file path
+      const newPath = await uploader(path); // Upload the file to Cloudinary
+      urls.push(newPath); // Add the uploaded file URL to the list
+      try {
+        fs.unlinkSync(path); // Delete the file from the local system
+      } catch (error) {
+        console.error(`Error deleting file at ${path}:`, error); // Log the error
+      }
+    }
+    const findProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        images: urls.map((file) => {
+          return file; // Map the uploaded URLs to the product
+        }),
+      },
+      { new: true } // Return the updated product
+    );
+    res.json(findProduct); // Send the updated product as a response
+  } catch (error) {
+    throw new Error(error); // Handle errors
+  }
+});
+
+
+
 // Export the functions
-module.exports = {  createProduct,  getProduct, getAllProduct , updateProduct, deleteProduct, addToWishlist , rating};
+module.exports = {  createProduct,  getProduct, getAllProduct , updateProduct, deleteProduct, addToWishlist , rating,
+  uploadImages
+};
