@@ -255,41 +255,33 @@ const rating = asyncHandler(async (req, res) =>{
 
 
 
-
-// Upload images for a product
 const uploadImages = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  validateMangoDbId(id); // Validate the MongoDB ID
+  validateMangoDbId(id);
   try {
-    const uploader = (path) => cloudinaryUploadImage(path, "images"); // Function to upload image to Cloudinary
+    const uploader = (path) => cloudinaryUploadImage(path, "images");
     const urls = [];
-    const files = req.files; // Get the uploaded files
+    const files = req.files;
     for (const file of files) {
-      const { path } = file; // Get the file path
-      const newPath = await uploader(path); // Upload the file to Cloudinary
-      urls.push(newPath); // Add the uploaded file URL to the list
-      try {
-        fs.unlinkSync(path); // Delete the file from the local system
-      } catch (error) {
-        console.error(`Error deleting file at ${path}:`, error); // Log the error
-      }
+      const { path } = file;
+      const newPath = await uploader(path);
+      urls.push(newPath);
+      fs.unlinkSync(path);
     }
     const findProduct = await Product.findByIdAndUpdate(
       id,
       {
         images: urls.map((file) => {
-          return file; // Map the uploaded URLs to the product
+          return file;
         }),
       },
-      { new: true } // Return the updated product
+      { new: true }
     );
-    res.json(findProduct); // Send the updated product as a response
+    res.json(findProduct);
   } catch (error) {
-    throw new Error(error); // Handle errors
+    throw new Error(error);
   }
 });
-
-
 
 // Export the functions
 module.exports = {  createProduct,  getProduct, getAllProduct , updateProduct, deleteProduct, addToWishlist , rating,
