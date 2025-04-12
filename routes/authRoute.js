@@ -6,7 +6,9 @@
 //Import the necessary modules
 const express = require("express");
 const router = express.Router();
-const { createUser,loginUserControl , getalluser, getaUser, deleteaUser,updateduser, blockUser , unblockUser , handleRefreshToken , logout ,updatepassword , forgetPasswordToken, resetPassword} = require("../controller/userCtrl");
+const { createUser,loginUserControl , getalluser, getaUser, deleteaUser,updateduser, blockUser , unblockUser , handleRefreshToken , 
+    logout ,updatepassword , forgetPasswordToken, resetPassword, loginAdmin, getWishlist, saveAddress,
+    userCart, getUserCart} = require("../controller/userCtrl");
 const { authmiddleware , isAdmin } = require("../middlewares/authmiddleware");
 
 
@@ -23,6 +25,8 @@ router.get("/cart", authmiddleware, getUserCart);
 router.get("/all-users" , getalluser)
 router.get("/refresh" , handleRefreshToken) 
 router.get("/logout" , logout)
+router.get("/wishlist" , authmiddleware , getWishlist)
+router.put("/save-address" , authmiddleware , saveAddress)
 router.get("/:id" , authmiddleware, isAdmin, getaUser)
 router.delete("/:id" , deleteaUser)
 router.put("/edit-user" , updateduser)
