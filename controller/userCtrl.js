@@ -69,6 +69,52 @@ const loginUserControl = asyncHandler(async (req, res) => {
 
 
 
+// Login admin-user
+const loginAdmin = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+    // Find user by email
+    const findAdmin = await User.findOne({ email });
+    // Check if user is an admin
+    if(findAdmin.role !== "admin") {throw new Error("Not Authorized");}
+    // Check if user exists and password matches
+    if (findAdmin && (await findAdmin.isPasswordMatched(password))) {
+        // Generate refresh token
+        const refreshToken = generateRefreshToken(findAdmin._id);
+        // Update user with refresh token
+        const updateduser = await User.findByIdAndUpdate(findAdmin.id, { refreshToken: refreshToken }, { new: true });
+        // Set refresh token in cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            maxAge: 72 * 60 * 60 * 1000,
+        });
+        // Respond with user details and access token
+        res.json({
+            _id: findAdmin?._id,
+            firstname: findAdmin?.firstname,
+            lastname: findAdmin?.lastname,
+            email: findAdmin?.email,
+            mobile: findAdmin?.mobile,
+            token: generateToken(findAdmin?._id)
+        });
+    } else {
+        // Throw error if credentials are invalid
+        throw new Error("Invalid Credentials");
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const logout = asyncHandler(async (req, res) => {
     const cookie = req.cookies;
     if (!cookie?.refreshToken) {throw new Error("No Refresh Token in Cookies")};
