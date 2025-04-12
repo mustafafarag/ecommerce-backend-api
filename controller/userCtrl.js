@@ -16,6 +16,8 @@ const jwt = require('jsonwebtoken');
 const { json } = require("body-parser");
 const { sendEmail } = require("./emailCtrl");
 const crypto = require("crypto");
+const Cart = require("../models/cartModel");
+const Product = require("../models/productModel");
 
 
 // Create a new user
@@ -221,6 +223,37 @@ const updateduser = asyncHandler(async(req,res) => {
 
 })
 
+
+
+// Save Address
+const saveAddress = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    validateMangoDbId(_id);
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            _id,
+            { address: req.body.address },
+            { new: true }
+        );
+        res.json(updatedUser);
+    } catch (error) {
+        throw new Error(error);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const deleteaUser = asyncHandler(async(req,res) =>{
 
     const {id} = req.params
@@ -335,12 +368,110 @@ const resetPassword = asyncHandler(async (req, res) => {
 });
 
 
+const getWishlist = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    validateMangoDbId(_id);
+    try {
+        const findUser = await User.findById(_id)
+        res.json(findUser);
+    } catch (error) {
+        throw new Error(error);
+    }
+});
+
+
+
+// ADD to User Cart
+const userCart = asyncHandler(async (req, res) => {
+    // Get the cart from the request body
+    const { cart } = req.body;
+    // Get the user id from the request user
+    const { _id } = req.user;
+    // Validate the MongoDB Id
+    validateMangoDbId(_id);
+    try {
+      // Create an empty array for products
+      let products = [];
+      // Find the user by its id
+      const user = await User.findById(_id);
+      // Check if cart with logged in user id contains products
+      const alreadyExistCart = await Cart.findOne({ orderedBy: user._id });
+      // If there is an existing cart, remove it
+      if (alreadyExistCart) {
+        alreadyExistCart.remove();
+      }
+      // Loop through the cart items
+      for (let i = 0; i < cart.length; i++) {
+        // Create an empty object
+        let object = {};
+        // Add the product id to the object
+        object.product = cart[i]._id;
+        // Add the count to the object
+        object.count = cart[i].count;
+        // Add the color to the object
+        object.color = cart[i].color;
+        // Get the price of the product
+        let { price } = await Product.findById(cart[i]._id)
+          .select("price")
+          .exec();
+        // Add the price to the object
+        object.price = price;
+        // Push the object to the products array
+        products.push(object);
+      }
+      // Calculate the total of the cart
+      let cartTotal = 0;
+      for (let i = 0; i < products.length; i++) {
+        cartTotal = cartTotal + products[i].price * products[i].count;
+      }
+      // Create a new cart with the products, total and user id
+      let newCart = await new Cart({
+        products,
+        cartTotal,
+        orderedBy: user._id,
+      }).save();
+      // Return a success response
+      res.status(200).json({
+        status: "success",
+        message: "Cart added successfully",
+        newCart,
+      });
+    } catch (error) {
+      // Throw an error if something goes wrong
+      throw new Error(error);
+    }
+  });
+  
 
 
 
 
 
 
+
+  // Get user cart
+  const getUserCart = asyncHandler(async (req, res) => {
+    // Get the user id from the request
+    const { _id } = req.user;
+  
+    // Validate the MongoDB Id
+    validateMangoDbId(_id);
+  
+    try {
+      // Find the cart associated with the user and populate the product details
+      const cart = await Cart.findOne({ orderedBy: _id })
+  
+      // Return the response with the cart details
+      res.status(200).json({
+        status: "success",
+        message: "User cart fetched successfully",
+        cart,
+      });
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+  
 
 
 
@@ -349,4 +480,5 @@ const resetPassword = asyncHandler(async (req, res) => {
 
 // Export the functions
 module.exports = {createUser, loginUserControl , getalluser, getaUser, deleteaUser, 
-    updateduser , blockUser , unblockUser , handleRefreshToken , logout, updatepassword , forgetPasswordToken , resetPassword}
+    updateduser , blockUser , unblockUser , handleRefreshToken , logout, updatepassword , forgetPasswordToken , resetPassword, loginAdmin
+    , getWishlist, saveAddress, userCart, getUserCart}
