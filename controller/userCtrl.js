@@ -20,7 +20,43 @@ const Cart = require("../models/cartModel");
 const Product = require("../models/productModel");
 
 
-// Create a new user
+
+
+/**
+ * @swagger
+ * /api/user/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstname
+ *               - lastname
+ *               - email
+ *               - password
+ *               - mobile
+ *             properties:
+ *               firstname:
+ *                 type: string
+ *               lastname:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               mobile:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: User already exists
+ */
 const createUser = asyncHandler(async (req, res) => {
     const email = req.body.email;
     // Check if user already exists
@@ -28,7 +64,10 @@ const createUser = asyncHandler(async (req, res) => {
     if (!findUser) {
         // Create new user if not found
         const newUser = await User.create(req.body);
-        res.json(newUser);
+        res.status(200).json({
+            message: "User created successfully",
+            newUser
+        });
     } else {
         // Throw error if user already exists
         throw new Error("User already exists");
@@ -38,7 +77,42 @@ const createUser = asyncHandler(async (req, res) => {
 
 
 
+
+
+
+
+
 // Login user controller
+/**
+ * @swagger
+ * /api/user/login:
+ *   post:
+ *     summary: Log in a user
+ *     description: >
+ *       Logs in the user and returns an access token in the response body.  
+ *       A `refreshToken` is also sent as an **HTTP-only cookie**.  
+ *       This cookie must be included in future requests to routes like `/logout` or `/refresh-token`.
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Invalid credentials
+ */
 const loginUserControl = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     // Find user by email
@@ -55,7 +129,8 @@ const loginUserControl = asyncHandler(async (req, res) => {
             maxAge: 72 * 60 * 60 * 1000,
         });
         // Respond with user details and access token
-        res.json({
+        res.status(200).json({
+            message: "Login successful",
             _id: findUser?._id,
             firstname: findUser?.firstname,
             lastname: findUser?.lastname,
@@ -72,6 +147,32 @@ const loginUserControl = asyncHandler(async (req, res) => {
 
 
 // Login admin-user
+/**
+ * @swagger
+ * /api/user/admin-login:
+ *   post:
+ *     summary: Admin login
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Admin login successful
+ *       401:
+ *         description: Invalid admin credentials
+ */
 const loginAdmin = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     // Find user by email
@@ -90,7 +191,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
             maxAge: 72 * 60 * 60 * 1000,
         });
         // Respond with user details and access token
-        res.json({
+        res.status(200).json({
             _id: findAdmin?._id,
             firstname: findAdmin?.firstname,
             lastname: findAdmin?.lastname,
@@ -113,30 +214,48 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
 
 
-
-
-
-
+/**
+ * @swagger
+ * /api/user/logout:
+ *   post:
+ *     summary: Logout the user
+ *     description: >
+ *       This endpoint logs out the user by clearing the `refreshToken` cookie.  
+ *       The `refreshToken` is issued as a **cookie** when the user logs in successfully.  
+ *       Make sure the client includes this cookie when calling this endpoint.
+ *     tags: [User]
+ *     responses:
+ *       204:
+ *         description: User logged out successfully
+ *       400:
+ *         description: No refresh token found in cookies
+ *       500:
+ *         description: Internal server error
+ *     security:
+ *       - cookieAuth: []
+ */
 const logout = asyncHandler(async (req, res) => {
     const cookie = req.cookies;
     if (!cookie?.refreshToken) {throw new Error("No Refresh Token in Cookies")};
     const refreshToken = cookie.refreshToken;
-    const user = await User.findOne({ refreshtoken: refreshToken  });
+    const user = await User.findOne({ refreshToken  });
     if (!user) {
       res.clearCookie("refreshToken", {
         httpOnly: true,
         secure: true,
       });
-      return res.sendStatus(204); // forbidden
+      return res.sendStatus(204);  // No Content
     }
-    await User.findOneAndUpdate(refreshToken, {
-      refreshToken: "",
-    });
+    // Remove refresh token from user
+    await User.findOneAndUpdate(
+        { refreshToken: refreshToken },
+        {refreshToken: ""},
+    );
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
     });
-    res.sendStatus(204); // forbidden
+    res.sendStatus(204) // No Content // Logout successfully
 });
 
 
@@ -175,7 +294,25 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
 
 
 
-
+/**
+ * @swagger
+ * /api/user/all-users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [User]
+ *     description: Returns a list of all registered users
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       500:
+ *         description: Server error
+ */
 const getalluser = asyncHandler(async(req,res) => {
 
     try {
@@ -188,8 +325,41 @@ const getalluser = asyncHandler(async(req,res) => {
 
 })
 
-//get a user 
+ 
 
+
+/**
+ * @swagger
+ * /api/user/{id}:
+ *   get:
+ *     summary: Get a user by ID
+ *     tags: [User]
+ *     description: >
+ *       Requires a valid **access token** obtained from the login endpoint.  
+ *       The token must be included in the request using the `Authorization` header in the format:  
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: MongoDB user ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A user object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid user ID
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ *     security:
+ *       - bearerAuth: []
+ */
 const getaUser = asyncHandler(async(req,res) =>{
 
     const {id} = req.params
@@ -202,6 +372,8 @@ const getaUser = asyncHandler(async(req,res) =>{
         throw new Error(error)
     }
 })
+
+
 
 const updateduser = asyncHandler(async(req,res) => {
 
