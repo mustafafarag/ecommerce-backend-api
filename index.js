@@ -6,6 +6,7 @@
 const express = require ("express")
 const dbConnect = require("./config/dbConnect")
 const app = express()
+const swaggerDocs = require('./swagger')
 const dotenv = require ("dotenv").config()
 const PORT = process.env.PORT || 4000
 const authRouter = require("./routes/authRoute")
@@ -27,7 +28,7 @@ dbConnect()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(morgan("dev")); 
-
+swaggerDocs(app)
 
 
 app.use("/api/user", authRouter)
