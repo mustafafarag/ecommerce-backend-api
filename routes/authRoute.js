@@ -24,7 +24,7 @@ router.post("/cart", authmiddleware, userCart);
 router.get("/cart", authmiddleware, getUserCart);
 router.get("/all-users" , getalluser)
 router.get("/refresh" , handleRefreshToken) 
-router.get("/logout" , logout)
+router.post("/logout" , logout)
 router.get("/wishlist" , authmiddleware , getWishlist)
 router.put("/save-address" , authmiddleware , saveAddress)
 router.get("/:id" , authmiddleware, isAdmin, getaUser)
