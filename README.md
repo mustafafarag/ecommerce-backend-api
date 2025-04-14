@@ -1,6 +1,3 @@
-# ecommerce-backend-api
-
-
 # 🛒 Ecommerce Backend API
 
 This is a **Node.js + Express** backend server for an eCommerce platform. It supports user authentication using JWT, role-based access (admin vs. user), and provides Swagger API documentation.
@@ -16,9 +13,6 @@ This is a **Node.js + Express** backend server for an eCommerce platform. It sup
 - [Available Scripts](#-available-scripts)
 - [Authentication](#-authentication)
 - [API Documentation](#-api-documentation)
-- [Project Structure](#-project-structure)
-- [Error Handling](#-error-handling)
-- [Security](#-security)
 - [License](#-license)
 
 ---
@@ -59,27 +53,36 @@ npm install
 
 ## ⚙️ Environment Variables
 
-Create a `.env` file in the root and add:
+Create a `.env` file in the root directory with the following:
 
 ```env
+# Server Config
 PORT=5000
-MONGODB_URL=your_mongo_connection_string
-JWT_SECRET=your_jwt_secret
+MONGODB_URL=mongodb://localhost:27017/your-db-name
+JWT_SECRET=your_jwt_secret_key
+
+# Email Configuration (for services like Nodemailer)
+MAIL_ID=your_email@example.com
+MP=your_app_password
+
+# Cloudinary Configuration (for image uploads)
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
+
+> ⚠️ Never commit this file to GitHub. It should remain private and be listed in `.gitignore`.
 
 ---
 
 ## 🧪 Available Scripts
 
 ```bash
-# Start the server
+# Start the application
 npm start
 
-# Development with live reloading
-npm run dev
-
-# Run tests
-npm test
+# Run the server in development mode using nodemon
+npm run server
 ```
 
 ---
@@ -107,48 +110,6 @@ http://localhost:5000/api-docs
 You can inspect routes, request/response structures, and try endpoints directly.
 
 Swagger is configured in [`swagger.js`](swagger.js)
-
----
-
-## 🧱 Project Structure
-
-```
-.
-├── config/
-│   ├── dbConnect.js         # MongoDB connection setup
-│   ├── jwtToken.js          # JWT generator
-│   └── refreshToken.js      # Refresh token generator
-│
-├── middlewares/
-│   ├── authmiddleware.js    # Auth and Admin guards
-│   └── errorHandler.js      # Central error handling
-│
-├── routes/
-│   ├── userRoute.js         # User-related routes
-│   └── ...                  # Other route files
-│
-├── index.js                 # Entry point
-├── swagger.js               # Swagger configuration
-├── .env                     # Environment variables
-└── package.json
-```
-
----
-
-## ❌ Error Handling
-
-Handled centrally in `middlewares/errorHandler.js`:
-- `notFound` middleware catches unknown routes
-- `errorHandler` handles runtime exceptions with status codes and stack traces
-
----
-
-## 🔒 Security Tips
-
-- Do **not** commit `.env` or secrets to source control
-- Use HTTPS in production
-- Rotate JWT secrets periodically
-- Implement rate limiting & validation (recommended for production)
 
 ---
 
