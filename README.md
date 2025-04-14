@@ -45,6 +45,8 @@ Optional but useful:
 
 ## 📦 Installation
 
+Make sure Git is installed to run the first command.
+
 ```bash
 git clone https://github.com/your-username/ecommerce.git
 cd ecommerce
