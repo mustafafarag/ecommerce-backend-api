@@ -261,6 +261,38 @@ const logout = asyncHandler(async (req, res) => {
 
 
 
+
+
+/**
+ * @swagger
+ * /api/user/refresh:
+ *   get:
+ *     summary: Refresh access token using refresh token cookie
+ *     description: >
+ *       This endpoint issues a new refreshtoken if the user provides a valid `refreshToken` in cookies.  
+ *       The `refreshToken` is stored as an HTTP-only cookie during login.  
+ *       No request body or header token is required — only the cookie is used.
+ *     tags: [User]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Access token refreshed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR...
+ *       400:
+ *         description: Missing or malformed refresh token
+ *       401:
+ *         description: Invalid or expired refresh token
+ *       500:
+ *         description: Server error
+ */
 const handleRefreshToken = asyncHandler(async (req, res) => {
     // Get cookies from request
     const cookie = req.cookies;
@@ -274,7 +306,7 @@ const handleRefreshToken = asyncHandler(async (req, res) => {
 
     // Check if user exists
     if (!user) {
-        throw new Error("No refresh token present in DB or Invalid Token");
+        throw new Error("No refreshtoken present in DB or Invalid Token");
     }
 
     // Verify refresh token
@@ -375,6 +407,53 @@ const getaUser = asyncHandler(async(req,res) =>{
 
 
 
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /api/user/edit-user:
+ *   put:
+ *     summary: Update the authenticated user's profile
+ *     description: >
+ *       Requires a valid **access token**.  
+ *       Updates the authenticated user's `firstname`, `lastname`, `email`, or `mobile`.  
+ *       The user ID is extracted from the token, not from the request.
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstname:
+ *                 type: string
+ *               lastname:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               mobile:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized - missing or invalid access token
+ *       500:
+ *         description: Server error
+ *     security:
+ *       - bearerAuth: []
+ */
 const updateduser = asyncHandler(async(req,res) => {
 
     try {
@@ -397,7 +476,41 @@ const updateduser = asyncHandler(async(req,res) => {
 
 
 
-// Save Address
+/**
+ * @swagger
+ * /api/user/save-address:
+ *   put:
+ *     summary: Save or update user address
+ *     description: >
+ *       Updates the authenticated user's address.  
+ *       Requires the user to be **logged in** and to send a valid **access token**  
+ *       in the `Authorization` header as:  
+ *       `Bearer YOUR_ACCESS_TOKEN`
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               address:
+ *                 type: string
+ *                 example: "123 Main St, New York, NY"
+ *     responses:
+ *       200:
+ *         description: User address updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid user ID or request
+ *       500:
+ *         description: Server error
+ *     security:
+ *       - bearerAuth: []
+ */
 const saveAddress = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     validateMangoDbId(_id);
@@ -425,9 +538,41 @@ const saveAddress = asyncHandler(async (req, res) => {
 
 
 
-
+/**
+ * @swagger
+ * /api/user/{id}:
+ *   delete:
+ *     summary: Delete a user by ID
+ *     description: >
+ *       Deletes a user from the database by their MongoDB ID.  
+ *       Requires authentication with a valid **access token**.
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: MongoDB user ID to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Invalid user ID
+ *       401:
+ *         description: Unauthorized - access token required
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
 const deleteaUser = asyncHandler(async(req,res) =>{
-
     const {id} = req.params
     validateMangoDbId(id)
     try{
@@ -440,6 +585,53 @@ const deleteaUser = asyncHandler(async(req,res) =>{
 })
 
 
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /api/user/block/{id}:
+ *   put:
+ *     summary: Block a user by ID (Admin only)
+ *     description: >
+ *       Sets the user's `isBlocked` status to `true`.  
+ *       Requires a valid **access token** with **admin** privileges.
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: MongoDB user ID to block
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User blocked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User is blocked
+ *       401:
+ *         description: Unauthorized - access token missing or invalid
+ *       403:
+ *         description: Forbidden - admin access required
+ *       400:
+ *         description: Invalid user ID
+ *       500:
+ *         description: Server error
+ */
 const blockUser = asyncHandler(async (req, res) => {
     const {id} = req.params;
     validateMangoDbId(id)
@@ -452,6 +644,48 @@ const blockUser = asyncHandler(async (req, res) => {
 })
 
 
+
+
+
+
+/**
+ * @swagger
+ * /api/user/unblock/{id}:
+ *   put:
+ *     summary: Unblock a user by ID (Admin only)
+ *     description: >
+ *       Sets the user's `isBlocked` status to `false`.  
+ *       Requires a valid **access token** with **admin** privileges.
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: MongoDB user ID to unblock
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User unblocked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User is unblocked
+ *       401:
+ *         description: Unauthorized - access token missing or invalid
+ *       403:
+ *         description: Forbidden - admin access required
+ *       400:
+ *         description: Invalid user ID
+ *       500:
+ *         description: Server error
+ */
 const  unblockUser = asyncHandler(async (req, res) => {
     const {id} = req.params;
     validateMangoDbId(id)
@@ -466,6 +700,48 @@ const  unblockUser = asyncHandler(async (req, res) => {
 
 // -----------------------------------------------------
 
+
+
+
+
+
+
+/**
+ * @swagger
+ * /api/user/password:
+ *   put:
+ *     summary: Update the authenticated user's password
+ *     description: >
+ *       Updates the password of the currently authenticated user.  
+ *       Requires a valid **access token**.  
+ *       The password must be sent in the request body.
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 example: NewSecurePassword123!
+ *     responses:
+ *       200:
+ *         description: Password updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Password missing or invalid
+ *       401:
+ *         description: Unauthorized - access token missing or invalid
+ *       500:
+ *         description: Server error
+ */
 const updatepassword = asyncHandler(async (req, res, next) => {
     const {_id} = req.user;
     const {password } = req.body;
@@ -487,7 +763,60 @@ const updatepassword = asyncHandler(async (req, res, next) => {
 
 
 
-// Forget Password Token
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /api/user/forget-password-token:
+ *   post:
+ *     summary: Request a password reset link
+ *     description: >
+ *       Sends a password reset link to the user's email if the account exists.  
+ *       The reset link is valid for 10 minutes.  
+ *       This will generate a password reset token and send it via email.
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Password reset email sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                 hashedToken:
+ *                   type: string
+ *                 passwordResetExpire:
+ *                   type: string
+ *                   format: date-time
+ *                 date:
+ *                   type: number
+ *                   description: Timestamp of the request
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
+
+// Forget-Password Token
 const forgetPasswordToken = asyncHandler(async (req, res) => {
     const {email} = req.body;
     const user = await User.findOne({email});
@@ -515,6 +844,59 @@ const { resettoken: token, passwordResetToken : hashedToken, passwordResetExpire
 })
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /api/user/reset-password/{token}:
+ *   put:
+ *     summary: Reset user's password
+ *     description: >
+ *       Resets a user's password using a valid password reset token.  
+ *       The token is received via email from a previous password reset request.  
+ *       This token must be used within 10 minutes of being issued.
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         description: Password reset token (from email link)
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 example: NewSecurePassword123!
+ *     responses:
+ *       200:
+ *         description: Password has been reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Token expired or invalid
+ *       500:
+ *         description: Server error
+ */
+
 // Reset Password
 const resetPassword = asyncHandler(async (req, res) => {
     const { password } = req.body;
@@ -540,12 +922,42 @@ const resetPassword = asyncHandler(async (req, res) => {
 });
 
 
+
+
+
+
+
+/**
+ * @swagger
+ * /api/user/wishlist:
+ *   get:
+ *     summary: Get the logged-in user's wishlist
+ *     description: >
+ *       Returns the wishlist of the currently authenticated user.  
+ *       Requires a valid **access token**.
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Wishlist retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized - access token missing or invalid
+ *       500:
+ *         description: Server error
+ */
 const getWishlist = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     validateMangoDbId(_id);
     try {
         const findUser = await User.findById(_id)
-        res.json(findUser);
+        res.json({
+            message: "User's Wishlist",
+            Wishlist: findUser.wishlist});
     } catch (error) {
         throw new Error(error);
     }
@@ -553,7 +965,82 @@ const getWishlist = asyncHandler(async (req, res) => {
 
 
 
-// ADD to User Cart
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @swagger
+ * /api/user/cart:
+ *   post:
+ *     summary: Add or update items in the user's cart
+ *     description: >
+ *       Adds a new cart for the authenticated user or replaces the existing one.  
+ *       Requires a valid **access token**.  
+ *       The cart must include an array of products with their `_id`, `count`, and `color`.
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - cart
+ *             properties:
+ *               cart:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - _id
+ *                     - count
+ *                     - color
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       description: Product ID
+ *                     count:
+ *                       type: integer
+ *                       description: Quantity
+ *                     color:
+ *                       type: string
+ *                       description: Selected color
+ *                 example:
+ *                   - _id: "60a7c29fd1234a0029f8cdef"
+ *                     count: 2
+ *                     color: "red"
+ *                   - _id: "60a7c2a3d1234a0029f8cdf1"
+ *                     count: 1
+ *                     color: "blue"
+ *     responses:
+ *       200:
+ *         description: Cart created or updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 message:
+ *                   type: string
+ *                   example: Cart added successfully
+ */
 const userCart = asyncHandler(async (req, res) => {
     // Get the cart from the request body
     const { cart } = req.body;
@@ -570,7 +1057,7 @@ const userCart = asyncHandler(async (req, res) => {
       const alreadyExistCart = await Cart.findOne({ orderedBy: user._id });
       // If there is an existing cart, remove it
       if (alreadyExistCart) {
-        alreadyExistCart.remove();
+        await alreadyExistCart.deleteOne();
       }
       // Loop through the cart items
       for (let i = 0; i < cart.length; i++) {
@@ -602,6 +1089,11 @@ const userCart = asyncHandler(async (req, res) => {
         cartTotal,
         orderedBy: user._id,
       }).save();
+
+        // Update the user with the new cart id
+      user.cart = newCart._id
+        await user.save()
+
       // Return a success response
       res.status(200).json({
         status: "success",
@@ -620,6 +1112,50 @@ const userCart = asyncHandler(async (req, res) => {
 
 
 
+
+
+
+
+/**
+ * @swagger
+ * /api/user/cart:
+ *   get:
+ *     summary: Get the authenticated user's cart
+ *     description: >
+ *       Returns the cart associated with the currently authenticated user.  
+ *       Requires a valid **access token** in the Authorization header.
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Cart fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 message:
+ *                   type: string
+ *                   example: User cart fetched successfully
+ *                 cart:
+ *                   type: object
+ *                   example:
+ *                     _id: "60a7c29fd1234a0029f8cdef"
+ *                     products:
+ *                       - product: "609e126fdb234a5c0a8fcabc"
+ *                         quantity: 2
+ *                     cartTotal: 120.00
+ *                     totalAfterDiscount: 100.00
+ *                     orderedBy: "609e126fdb234a5c0a8fcabc"
+ *       401:
+ *         description: Unauthorized - access token missing or invalid
+ *       500:
+ *         description: Server error
+ */
 
   // Get user cart
   const getUserCart = asyncHandler(async (req, res) => {
@@ -644,6 +1180,9 @@ const userCart = asyncHandler(async (req, res) => {
     }
   });
   
+
+
+
 
 
 
