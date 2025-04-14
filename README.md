@@ -6,8 +6,8 @@ This is a **Node.js + Express** backend server for a modern eCommerce platform, 
 
 ## 📚 Table of Contents
 
-
 - [Tech Stack](#-tech-stack)
+- [Dependencies](#-dependencies)
 - [Installation](#-installation)
 - [Environment Variables](#-environment-variables)
 - [Available Scripts](#-available-scripts)
@@ -27,6 +27,21 @@ This is a **Node.js + Express** backend server for a modern eCommerce platform, 
 - Swagger for API docs
 
 ---
+
+## 🧱 Dependencies
+
+To run this backend application locally, make sure you have the following installed:
+
+- **Node.js** (v18 or higher recommended)
+- **npm** (comes with Node.js)
+- **MongoDB** (local or hosted instance like MongoDB Atlas)
+- **Cloudinary Account** (for image uploads)
+- **Email Service Provider** (e.g., Gmail app password for sending emails)
+
+Optional but useful:
+
+- **nodemon** (for development hot reload)
+
 
 ## 📦 Installation
 
