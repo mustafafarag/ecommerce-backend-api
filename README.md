@@ -1,6 +1,6 @@
 # 🛒 Ecommerce Backend API
 
-This is a **Node.js + Express** backend server for an eCommerce platform. It supports user authentication using JWT, role-based access (admin vs. user), and provides Swagger API documentation.
+This is a **Node.js + Express** backend server for a modern eCommerce platform, designed with modularity, scalability, and real-world business logic in mind.
 
 ---
 
