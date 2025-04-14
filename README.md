@@ -76,7 +76,7 @@ npm run server
 
 ## 📦 Core Features Overview
 
-A breakdown of the core business logic organized by each controller in your ecommerce backend.
+A breakdown of the core business logic organized by each controller in the ecommerce backend.
 
 ---
 
@@ -117,7 +117,7 @@ Supports the categorization of products:
 
 Handles brand-related metadata:
 
-- CRUD operations for managing product brands
+- Management of brand Create, retrieve (single and all), update, and delete product brands
 
 ---
 
@@ -126,7 +126,6 @@ Handles brand-related metadata:
 Implements logic for promotional discounts:
 
 - Creating and maintaining discount coupons
-- Applying valid coupons to the user's shopping cart
 
 ---
 
