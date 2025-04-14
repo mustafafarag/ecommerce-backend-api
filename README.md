@@ -115,7 +115,7 @@ Handles all aspects of user account management and authentication:
 Manages the full product lifecycle and media uploads:
 
 - Creation, retrieval, updating, and deletion of products
-- Filtering and sorting of product listings
+- Filtering,sorting and pagination of product listings
 - Image uploads using Cloudinary
 
 ---
@@ -124,7 +124,7 @@ Manages the full product lifecycle and media uploads:
 
 Supports the categorization of products:
 
-- Management of product categories including creation, editing, and deletion
+- Management of product categories including creation, retrieve (single and all), editing, and deletion
 
 ---
 
