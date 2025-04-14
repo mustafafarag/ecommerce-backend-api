@@ -1,5 +1,7 @@
 # 🛒 Ecommerce Backend API
 
+# 🛒 Ecommerce Backend API
+
 This is a **Node.js + Express** backend server for an eCommerce platform. It supports user authentication using JWT, role-based access (admin vs. user), and provides Swagger API documentation.
 
 ---
@@ -11,9 +13,8 @@ This is a **Node.js + Express** backend server for an eCommerce platform. It sup
 - [Installation](#-installation)
 - [Environment Variables](#-environment-variables)
 - [Available Scripts](#-available-scripts)
-- [Authentication](#-authentication)
+- [Core Features Overview](#-core-features-overview)
 - [API Documentation](#-api-documentation)
-- [License](#-license)
 
 ---
 
@@ -87,17 +88,86 @@ npm run server
 
 ---
 
-## 🔐 Authentication
+## 📦 Core Features Overview
 
-This app uses JWT-based authentication with middleware logic:
-
-- **Access Token**: expires in `3d`
-- **Refresh Token**: expires in `1d`
-- Middleware:
-  - `authmiddleware` verifies JWT and attaches user to `req.user`
-  - `isAdmin` ensures the user has an `admin` role
+A breakdown of the core business logic organized by each controller in your ecommerce backend.
 
 ---
+
+### 👤 **User Controller**
+
+Handles all aspects of user account management and authentication:
+
+- User registration, login, and admin authentication
+- Refresh token logic for persistent sessions
+- Password recovery and reset workflows
+- Profile update and password change for authenticated users
+- User blocking/unblocking by admin
+- Wishlist and address management
+- Shopping cart functionality (add, update, retrieve)
+- Logout and session clearing
+
+---
+
+### 🛍️ **Product Controller**
+
+Manages the full product lifecycle and media uploads:
+
+- Creation, retrieval, updating, and deletion of products
+- Filtering and sorting of product listings
+- Image uploads using Cloudinary
+
+---
+
+### 🗂️ **Product Category Controller**
+
+Supports the categorization of products:
+
+- Management of product categories including creation, editing, and deletion
+
+---
+
+### 🏷️ **Brand Controller**
+
+Handles brand-related metadata:
+
+- CRUD operations for managing product brands
+
+---
+
+### 🎟️ **Coupon Controller**
+
+Implements logic for promotional discounts:
+
+- Creating and maintaining discount coupons
+- Applying valid coupons to the user's shopping cart
+
+---
+
+### ✍️ **Blog Controller**
+
+Powers the content publishing system:
+
+- Creating, editing, and deleting blog posts
+- Blog engagement features like likes and dislikes
+- Uploading blog images via Cloudinary
+
+---
+
+### 🧾 **Blog Category Controller**
+
+Maintains classification for blog content:
+
+- Manage categories associated with blog posts
+
+---
+
+### 📧 **Email Controller**
+
+Facilitates outbound email communication:
+
+- Sending transactional emails (e.g., password reset, verification)
+
 
 ## 📚 API Documentation (Swagger)
 
@@ -112,11 +182,3 @@ You can inspect routes, request/response structures, and try endpoints directly.
 Swagger is configured in [`swagger.js`](swagger.js)
 
 ---
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-> Developed with ❤️ using Node.js + Express
