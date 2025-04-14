@@ -6,25 +6,13 @@ This is a **Node.js + Express** backend server for a modern eCommerce platform, 
 
 ## 📚 Table of Contents
 
-- [Features](#-features)
+
 - [Tech Stack](#-tech-stack)
 - [Installation](#-installation)
 - [Environment Variables](#-environment-variables)
 - [Available Scripts](#-available-scripts)
 - [Core Features Overview](#-core-features-overview)
 - [API Documentation](#-api-documentation)
-
----
-
-## ✨ Features
-
-- User authentication with JWT
-- Role-based access control (Admin/User)
-- RESTful API structure
-- MongoDB integration via Mongoose
-- Centralized error handling
-- Swagger documentation
-- Modular structure for scalability
 
 ---
 
