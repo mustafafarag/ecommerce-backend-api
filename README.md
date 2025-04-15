@@ -46,7 +46,7 @@ Optional but useful:
 ## 📦 Installation
 
 
-### 🔧 Option 1: Run Locally (with Node.js & MogoDB)
+### 🔧 Option 1: Run Locally (with Node.js & MongoDB)
 
 Make sure Git is installed to run the first command.
 
