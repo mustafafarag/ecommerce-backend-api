@@ -58,6 +58,19 @@ npm install
 
 Make sure MongoDB is running locally and `.env` is configured properly.
 
+
+## 🧪 Available Scripts
+
+```bash
+# Start the application
+npm start
+
+# Run the server in development mode using nodemon
+npm run server
+```
+
+
+
 ---
 
 ### 🐳 Option 2: Run with Docker & Docker Compose (Ubuntu/Linux)
@@ -122,17 +135,6 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 ---
 
-## 🧪 Available Scripts
-
-```bash
-# Start the application
-npm start
-
-# Run the server in development mode using nodemon
-npm run server
-```
-
----
 
 ## 📦 Core Features Overview
 
