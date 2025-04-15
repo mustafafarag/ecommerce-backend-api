@@ -45,6 +45,9 @@ Optional but useful:
 
 ## 📦 Installation
 
+
+### 🔧 Option 1: Run Locally (with Node.js)
+
 Make sure Git is installed to run the first command.
 
 ```bash
@@ -52,6 +55,46 @@ git clone https://github.com/your-username/ecommerce.git
 cd ecommerce
 npm install
 ```
+
+Make sure MongoDB is running locally and `.env` is configured properly.
+
+---
+
+### 🐳 Option 2: Run with Docker & Docker Compose (Ubuntu/Linux)
+
+> ⚠️ **Docker and Docker Compose v2 must be installed** on your system.  
+> You can check this with: `docker compose version`
+
+```bash
+git clone https://github.com/mustafafarag/ecommerce-backend-api.git
+cd ecommerce-backend-api
+```
+
+Create a `.env` file in the root directory like mentioned in the **Environment Variables** section.
+
+> ⚠️ When using Docker, update your `.env`:
+>
+> Replace:
+> ```env
+> MONGODB_URL=mongodb://localhost:27017/your-db-name
+> ```
+> With:
+> ```env
+> MONGODB_URL=mongodb://mongo:27017/your-db-name
+> ```
+
+Then run the following:
+
+```bash
+docker compose up -d --build
+```
+
+To stop containers:
+
+```bash
+docker compose down
+```
+
 
 ---
 
