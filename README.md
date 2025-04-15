@@ -53,8 +53,8 @@ Optional but useful:
 Make sure Git is installed to run the first command.
 
 ```bash
-git clone https://github.com/your-username/ecommerce.git
-cd ecommerce
+git clone https://github.com/mustafafarag/ecommerce-backend-api.git
+cd ecommerce-backend-api
 npm install
 ```
 
