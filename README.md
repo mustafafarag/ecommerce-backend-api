@@ -38,7 +38,7 @@ To run this backend application locally, make sure you have the following instal
 - **MongoDB** (local or hosted instance like MongoDB Atlas)
 - **Cloudinary Account** (for image uploads)
 - **Email Service Provider** (e.g., Gmail app password for sending emails)
--**Redis** (V5, For Rate limiting)
+- **Redis** (V5, For Rate limiting)
 
 Optional but useful:
 
