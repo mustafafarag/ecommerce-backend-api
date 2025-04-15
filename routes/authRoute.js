@@ -10,16 +10,16 @@ const { createUser,loginUserControl , getalluser, getaUser, deleteaUser,updatedu
     logout ,updatepassword , forgetPasswordToken, resetPassword, loginAdmin, getWishlist, saveAddress,
     userCart, getUserCart} = require("../controller/userCtrl");
 const { authmiddleware , isAdmin } = require("../middlewares/authmiddleware");
-
+const rateLimiter = require('../middlewares/redisRateLimiter')
 
 
 // Define the routes for the user.
 router.post("/register", createUser);
 router.post("/forget-password-token",forgetPasswordToken );
-router.put("/reset-password/:token",resetPassword);
+router.put("/reset-password/:token",rateLimiter('reset-password-token'), resetPassword);
 router.put("/password",authmiddleware, updatepassword)
-router.post("/login", loginUserControl);
-router.post("/admin-login", loginAdmin);
+router.post("/login", rateLimiter('login') , loginUserControl);
+router.post("/admin-login",rateLimiter('admin-login'), loginAdmin);
 router.post("/cart", authmiddleware, userCart);
 router.get("/cart", authmiddleware, getUserCart);
 router.get("/all-users" , getalluser)
