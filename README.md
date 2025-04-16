@@ -87,7 +87,7 @@ cd ecommerce-backend-api
 
 Create a `.env` file in the root directory like mentioned in the **Environment Variables** section.
 
-> ⚠️ When using Docker, update your `.env`:
+> ⚠️ When using Docker, update your `.env`: For MongoDB
 >
 > Replace:
 > ```env
@@ -98,10 +98,32 @@ Create a `.env` file in the root directory like mentioned in the **Environment V
 > MONGODB_URL=mongodb://mongo:27017/your-db-name
 > ```
 
+
+> ⚠️ When using Docker, update your `.env`: For Redis
+>
+> Replace:
+> ```env
+> MONGODB_URL=redis://localhost:6379
+> ```
+> With:
+> ```env
+> MONGODB_URL=redis://redis:6379
+> ```
+
+
+
+
 Then run the following:
 
 ```bash
 docker compose up -d --build
+
+# Or Use 
+# Enables Docker Bake, a newer and more powerful way to define and run multi-image builds with features 
+#like parallel building and build matrices 
+
+COMPOSE_BAKE=true docker compose up --build
+
 ```
 
 To stop containers:
