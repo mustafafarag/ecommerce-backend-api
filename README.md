@@ -48,7 +48,7 @@ Optional but useful:
 ## 📦 Installation
 
 
-### 🔧 Option 1: Run Locally (with Node.js & MongoDB)
+### 🔧 Option 1: Run Locally (with Node.js , MongoDB & Redis)    (Ubuntu/Linux)
 
 Make sure Git is installed to run the first command.
 
