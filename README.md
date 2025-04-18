@@ -103,11 +103,11 @@ Create a `.env` file in the root directory like mentioned in the **Environment V
 >
 > Replace:
 > ```env
-> MONGODB_URL=redis://localhost:6379
+> REDIS_URL=redis://localhost:6379
 > ```
 > With:
 > ```env
-> MONGODB_URL=redis://redis:6379
+> REDIS_URL=redis://redis:6379
 > ```
 
 
@@ -148,6 +148,9 @@ JWT_SECRET=your_jwt_secret_key
 # Email Configuration (for services like Nodemailer)
 MAIL_ID=your_email@example.com
 MP=your_app_password
+
+#Redis
+REDIS_URL=redis://localhost:6379
 
 # Cloudinary Configuration (for image uploads)
 CLOUDINARY_CLOUD_NAME=your_cloud_name
