@@ -48,7 +48,7 @@ Optional but useful:
 ## 📦 Installation
 
 
-### 🔧 Option 1: Run Locally (with Node.js , MongoDB & Redis)    (Ubuntu/Linux)
+### 🔧 Option 1: Run Locally (with Node.js , MongoDB & Redis)  on  (Ubuntu/Linux)
 
 Make sure Git is installed to run the first command.
 
@@ -75,7 +75,7 @@ npm run server
 
 ---
 
-### 🐳 Option 2: Run with Docker & Docker Compose (Ubuntu/Linux)
+### 🐳 Option 2: Run with Docker & Docker Compose on (Ubuntu/Linux)
 
 > ⚠️ **Docker and Docker Compose v2 must be installed** on your system.  
 > You can check this with: `docker compose version`
