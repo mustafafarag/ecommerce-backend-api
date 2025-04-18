@@ -78,7 +78,7 @@ npm run server
 ### 🐳 Option 2: Run with Docker & Docker Compose on (Ubuntu/Linux)
 
 > ⚠️ **Docker and Docker Compose v2 must be installed** on your system.  
-> You can check this with: `docker compose version`
+> You can check this with: `docker --version`  & `docker compose version`
 
 ```bash
 git clone https://github.com/mustafafarag/ecommerce-backend-api.git
