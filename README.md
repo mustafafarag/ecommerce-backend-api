@@ -58,7 +58,7 @@ cd ecommerce-backend-api
 npm install
 ```
 
-Make sure MongoDB is running locally and `.env` is configured properly.
+Make sure MongoDB & Redis is running locally and `.env` is configured properly.
 
 
 ## 🧪 Available Scripts
@@ -118,9 +118,8 @@ Then run the following:
 ```bash
 docker compose up -d --build
 
-# Or Use 
-# Enables Docker Bake, a newer and more powerful way to define and run multi-image builds with features 
-#like parallel building and build matrices 
+# Or Use Docker Bake
+#Enable Docker Bake for efficient multi-image builds with features like parallel builds and build matrices.
 
 COMPOSE_BAKE=true docker compose up --build
 
