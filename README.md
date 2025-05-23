@@ -91,11 +91,11 @@ Create a `.env` file in the root directory like mentioned in the **Environment V
 >
 > Replace:
 > ```env
-> MONGODB_URL=mongodb://localhost:27017/your-db-name
+> MONGODB_URI=mongodb://<your-username>:<your-password>@localhost:27017/<your-database-name>?authSource=admin
 > ```
 > With:
 > ```env
-> MONGODB_URL=mongodb://mongo:27017/your-db-name
+> MONGODB_URI=mongodb://mongo:27017/your-db-name
 > ```
 
 
@@ -141,7 +141,7 @@ Create a `.env` file in the root directory with the following:
 ```env
 # Server Config
 PORT=5000
-MONGODB_URL=mongodb://localhost:27017/your-db-name
+MONGODB_URI=MONGODB_URI=mongodb://<your-username>:<your-password>@localhost:27017/<your-database-name>?authSource=admin
 JWT_SECRET=your_jwt_secret_key
 
 # Email Configuration (for services like Nodemailer)
